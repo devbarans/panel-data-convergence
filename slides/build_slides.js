@@ -19,6 +19,8 @@ const S = RESULT.pwt11;
 const K = RESULT.pwt5;
 const FIGURE = (name) => path.join(ROOT, "outputs", "figures", name);
 const OUTPUT = path.join(__dirname, "panel_data_slides.pptx");
+const REPO_URL = "https://github.com/devbarans/panel-data-convergence";
+const REPO_LABEL = "github.com/devbarans/panel-data-convergence";
 
 // ---------------------------------------------------------------- cover details
 // Personal details live in config/authors.json, which is not committed.
@@ -121,8 +123,19 @@ function card(s, x, y, w, h, o = {}) {
     objectName: o.name || "Card",
   });
 }
-function sectionLabel(s, label) {
-  text(s, label.toLocaleUpperCase("tr-TR"), { x: ML, y: 0.3, w: 8, h: 0.3, fontSize: 12, bold: true, color: MID, charSpacing: 3, objectName: "Section label" });
+// Clickable link to the code repository, placed in the top-right corner by default.
+function repoLink(s, o = {}) {
+  const prefix = o.prefix === undefined ? "Kod: " : o.prefix;
+  const size = o.fontSize || 11;
+  s.addText([
+    { text: prefix, options: { fontFace: BODY, fontSize: size, color: MID } },
+    { text: REPO_LABEL, options: { fontFace: BODY, fontSize: size, color: o.color || DARK, bold: o.bold, hyperlink: { url: REPO_URL, tooltip: "GitHub: kod ve veri" } } },
+  ], { x: o.x ?? ML + CW - 5.2, y: o.y ?? 0.3, w: o.w ?? 5.2, h: o.h ?? 0.3, align: o.align || "right", valign: "middle", margin: 0, isTextBox: true, objectName: "Repository link" });
+}
+// Section label (top left) and repository link (top right) shared by every content slide.
+function slideHeader(s, label) {
+  text(s, label.toLocaleUpperCase("tr-TR"), { x: ML, y: 0.3, w: 6.5, h: 0.3, fontSize: 12, bold: true, color: MID, charSpacing: 3, objectName: "Section label" });
+  repoLink(s);
 }
 function title(s, t) {
   s.addText(t, { placeholder: "title" });
@@ -236,13 +249,14 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
       text(s, id, { x: ML + 3.6, y: 6.4 + i * 0.4, w: 2.8, h: 0.38, fontSize: 18, color: DARK, valign: "middle" });
     });
   }
+  repoLink(s, { y: 0.3 });
   coverGrid(s, 7.5, 0.9);
 }
 
 // ================================================================= 2. OUTLINE
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Giriş" });
-  sectionLabel(s, "Giriş");
+  slideHeader(s,"Giriş");
   title(s, "Sunum akışı");
   const items = [
     ["Soru ve temel kavramlar", "Türkiye ve Kore örneği, veri tipleri, panel verinin tanımı (slayt 3–6)"],
@@ -266,7 +280,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 3. OPENING QUESTION
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Giriş" });
-  sectionLabel(s, "Giriş");
+  slideHeader(s,"Giriş");
   title(s, "1973'te Türkiye, Kore'nin iki katı zengindi");
   image(s, FIGURE("01_turkey_korea.png"), ML, 1.6, 7.9, 4.0, "Türkiye, Güney Kore ve Arjantin'de kişi başı gelir, 1960-2023");
   text(s, "Kaynak: Penn World Table 11.0. Kişi başı reel GSYH (rgdpna / nüfus), 2021 fiyatları, logaritmik eksen.", { x: ML, y: 5.7, w: 7.9, h: 0.4, fontSize: 12, color: MID });
@@ -284,7 +298,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 4. DATA TYPES
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Giriş" });
-  sectionLabel(s, "Giriş");
+  slideHeader(s,"Giriş");
   title(s, "Neden panel veri?");
   const cards = [
     ["Yatay kesit verisi", "Tek bir dönemde çok sayıda ülke. Ülkeler arası farkı görürüz; ancak kurum, kültür ve coğrafya gibi gözlenemeyen farkları kontrol edemeyiz.", 5, 1],
@@ -311,7 +325,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 5. DEFINITION
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Giriş" });
-  sectionLabel(s, "Giriş");
+  slideHeader(s,"Giriş");
   title(s, "Panel veri nedir?");
   card(s, ML, 1.65, 5.9, 5.2);
   text(s, paragraphs([
@@ -331,7 +345,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 6. ADVANTAGES / CAVEATS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Giriş" });
-  sectionLabel(s, "Giriş");
+  slideHeader(s,"Giriş");
   title(s, "Avantajlar ve dikkat edilecekler");
   const w = 5.95, y = 1.65, h = 5.2;
   card(s, ML, y, w, h);
@@ -359,7 +373,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 {
   pres.addSection({ title: "Kuram" });
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Kuram" });
-  sectionLabel(s, "Kuram");
+  slideHeader(s,"Kuram");
   title(s, "Temel panel modeli");
   card(s, ML, 1.65, CW, 1.35, { fill: WHITE, line: INK });
   text(s, runs("y_{it} = α + x_{it}′β + μ_{i} + ε_{it}", { fontFace: HEAD, fontSize: 38, bold: true, color: INK }), { x: ML, y: 1.65, w: CW, h: 1.35, align: "center", valign: "middle" });
@@ -384,7 +398,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 8. THREE ESTIMATORS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Kuram" });
-  sectionLabel(s, "Kuram");
+  slideHeader(s,"Kuram");
   title(s, "Üç temel tahmin edici");
   table(s, [
     ["", "Havuzlanmış EKK", "Sabit Etkiler (FE)", "Rassal Etkiler (RE)"],
@@ -399,7 +413,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 9. MODEL SELECTION
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Kuram" });
-  sectionLabel(s, "Kuram");
+  slideHeader(s,"Kuram");
   title(s, "Model seçimi: hangi test neyi sınar?");
   const steps = [
     ["1", "F testi", "Havuzlanmış EKK ↔ Sabit etkiler", "H₀: Tüm ülke etkileri eşit.", "H₀ reddedilirse ülke etkileri vardır; havuzlanmış EKK yetersizdir."],
@@ -426,7 +440,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 10. ASSUMPTION TESTS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Kuram" });
-  sectionLabel(s, "Kuram");
+  slideHeader(s,"Kuram");
   title(s, "Varsayım testleri ve önlemler");
   table(s, [
     ["Test", "Sıfır hipotezi", "Tespit edilen sorun", "Önlem"],
@@ -441,7 +455,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 11. DYNAMIC PANELS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Kuram" });
-  sectionLabel(s, "Kuram");
+  slideHeader(s,"Kuram");
   title(s, "Dinamik paneller (kısaca)");
   card(s, ML, 1.65, CW, 1.2, { fill: WHITE, line: INK });
   text(s, runs("y_{it} = ρ y_{i,t−1} + x_{it}′β + μ_{i} + ε_{it}", { fontFace: HEAD, fontSize: 34, bold: true, color: INK }), { x: ML, y: 1.65, w: CW, h: 1.2, align: "center", valign: "middle" });
@@ -465,7 +479,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 {
   pres.addSection({ title: "Uygulama" });
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Veri ve model");
   card(s, ML, 1.65, 5.2, 3.75);
   text(s, paragraphs([
@@ -494,7 +508,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 13. PANEL STRUCTURE
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Panel yapısı: ülkeler ve dönemler");
   image(s, FIGURE("02_panel_structure.png"), ML, 1.65, 7.8, 4.2, "Seçili ülkelerin on dönemlik büyüme serileri");
   text(s, "Gri çizgiler: ABD, Güney Kore, Çin, Brezilya, Mısır, Hindistan, İtalya, Meksika, Nijerya, İspanya, Yunanistan, Polonya, Arjantin.", { x: ML, y: 5.95, w: 7.8, h: 0.9, fontSize: 13, color: MID });
@@ -511,7 +525,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 14. POOLED vs WITHIN
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Aynı veri, iki farklı cevap");
   image(s, FIGURE("03_pooled_vs_within.png"), ML, 1.65, 8.2, 3.45, "Havuzlanmış veri ile ülke içi sapmaların karşılaştırması");
   const b = S.bivariate_slopes;
@@ -528,7 +542,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 15. ESTIMATION RESULTS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Tahmin sonuçları");
   const cell = (model, variable) => {
     const c = coef(model, variable);
@@ -556,7 +570,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 16. COEFFICIENT PLOT
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Katsayılar ve yorum");
   image(s, FIGURE("05_coefficients.png"), ML, 1.6, CW, 3.55, "Üç modelin katsayı tahminleri ve güven aralıkları");
   const est = (model, variable) => coef(model, variable).estimate;
@@ -578,7 +592,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 17. MODEL SELECTION RESULTS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Model seçimi testleri");
   const F = TESTS.f_poolability, BP = TESTS.breusch_pagan_lm, H = TESTS.hausman, M = TESTS.mundlak;
   table(s, [
@@ -595,7 +609,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 18. ASSUMPTION TEST RESULTS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Uygulama" });
-  sectionLabel(s, "Uygulama");
+  slideHeader(s,"Uygulama");
   title(s, "Varsayım testi sonuçları");
   const W = TESTS.wooldridge, MW = TESTS.modified_wald, P = TESTS.pesaran_cd;
   table(s, [
@@ -620,7 +634,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 {
   pres.addSection({ title: "Güncel tartışma" });
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Güncel tartışma" });
-  sectionLabel(s, "Güncel tartışma");
+  slideHeader(s,"Güncel tartışma");
   title(s, "Yakınsamaya doğru mu gidiyoruz?");
   image(s, FIGURE("04_convergence.png"), ML, 1.6, 7.9, 3.75, "Her dönem için ayrı yatay kesit regresyonunun eğimi");
   const cs = S.cross_section_slopes;
@@ -637,7 +651,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 20. OLD DATA / NEW DATA
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Güncel tartışma" });
-  sectionLabel(s, "Güncel tartışma");
+  slideHeader(s,"Güncel tartışma");
   title(s, "1991 verisi ile 2025 verisi aynı şeyi söylüyor mu?");
   const cell = (model, variable, source) => {
     const c = coef(model, variable, source);
@@ -669,7 +683,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 21. PANEL LENGTH
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Güncel tartışma" });
-  sectionLabel(s, "Güncel tartışma");
+  slideHeader(s,"Güncel tartışma");
   title(s, "Panel uzadıkça ne değişiyor?");
   image(s, FIGURE("06_panel_length.png"), ML, 1.6, 7.9, 4.0, "Sabit etkiler katsayısının panel uzunluğuna göre değişimi");
   const effect = S.panel_length_effect;
@@ -689,7 +703,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 {
   pres.addSection({ title: "Türkiye ve sonuç" });
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Türkiye ve sonuç" });
-  sectionLabel(s, "Türkiye");
+  slideHeader(s,"Türkiye");
   title(s, "Türkiye: gerçekleşen büyüme ve model");
   image(s, FIGURE("07_turkey.png"), ML, 1.6, 8.0, 3.85, "Türkiye için gerçekleşen büyüme ve sabit etkiler modelinin uyum değeri");
   const rows = [["Dönem", ...TUR.periods.map((p) => p.period_label.slice(2))], ["Fark (puan)", ...TUR.periods.map((p) => signed(p.residual, 1))]];
@@ -709,7 +723,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 23. LIMITATIONS
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Türkiye ve sonuç" });
-  sectionLabel(s, "Sonuç");
+  slideHeader(s,"Sonuç");
   title(s, "Sınırlılıklar ve dikkat noktaları");
   const boxes = [
     ["Dinamik yapı", `Başlangıç geliri gecikmeli bağımlı değişken gibi davranır. T = ${TT} ile Nickell yanlılığı azalır ama sıfırlanmaz; GMM bir sonraki adım olabilir.`],
@@ -730,7 +744,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 24. CONCLUSION
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Türkiye ve sonuç" });
-  sectionLabel(s, "Sonuç");
+  slideHeader(s,"Sonuç");
   title(s, "Sonuç ve çıkarımlar");
   const speed = S.convergence_speed;
   const points = [
@@ -751,7 +765,7 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
 // ================================================================= 25. REFERENCES
 {
   const s = pres.addSlide({ masterName: "CONTENT", sectionTitle: "Türkiye ve sonuç" });
-  sectionLabel(s, "Sonuç");
+  slideHeader(s,"Sonuç");
   title(s, "Kaynaklar");
   const left = [
     "Acemoglu, D. ve Molina, C. (2022). Converging to converge? A comment. NBER Macroeconomics Annual, 36.",
@@ -784,7 +798,9 @@ const N = S.data.N, TT = S.data.T, OBS = S.data.observations;
   const s = pres.addSlide({ masterName: "COVER", sectionTitle: "Türkiye ve sonuç" });
   text(s, "Teşekkürler", { x: ML, y: 2.3, w: 6.6, h: 1.4, fontFace: HEAD, fontSize: 60, bold: true, valign: "middle" });
   text(s, "Sorular ve tartışma", { x: ML, y: 3.9, w: 6.6, h: 0.8, fontSize: 28, color: DARK });
-  text(s, "Kod ve veri: python src/run_all.py ile tüm sonuçlar yeniden üretilir.", { x: ML, y: 5.2, w: 6.6, h: 0.5, fontSize: 15, color: MID });
+  text(s, "Kod ve veri", { x: ML, y: 5.0, w: 6.6, h: 0.35, fontSize: 15, bold: true, color: MID });
+  repoLink(s, { prefix: "", x: ML, y: 5.35, w: 6.6, h: 0.45, fontSize: 18, bold: true, color: INK, align: "left" });
+  text(s, "python src/run_all.py ile tüm sonuçlar yeniden üretilir.", { x: ML, y: 5.85, w: 6.6, h: 0.35, fontSize: 14, color: MID });
   coverGrid(s, 7.5, 0.9);
 }
 
