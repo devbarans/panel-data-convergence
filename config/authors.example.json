@@ -1,0 +1,8 @@
+{
+  "course": "Course name",
+  "date": "Month Year",
+  "authors": [
+    { "name": "Name SURNAME", "student_id": "000000000000" },
+    { "name": "Name SURNAME", "student_id": "000000000000" }
+  ]
+}
