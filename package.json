@@ -1,0 +1,13 @@
+{
+  "name": "panel-data-convergence",
+  "version": "1.0.0",
+  "description": "Builds the presentation deck for the panel data analysis of growth and convergence",
+  "private": true,
+  "scripts": {
+    "slides": "node slides/build_slides.js"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "pptxgenjs": "4.0.1"
+  }
+}
