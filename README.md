@@ -326,6 +326,7 @@ Rapor, sunum ve grafikler açık temada ve yalnızca gri tonlarıyla hazırlanm�
 - Blundell, R. ve Bond, S. (1998). Initial conditions and moment restrictions in dynamic panel data models. *Journal of Econometrics*, 87(1).
 - Breusch, T. S. ve Pagan, A. R. (1980). The Lagrange multiplier test and its applications to model specification in econometrics. *Review of Economic Studies*, 47(1).
 - Feenstra, R. C., Inklaar, R. ve Timmer, M. P. (2015). The next generation of the Penn World Table. *American Economic Review*, 105(10). Veri: PWT 11.0, www.ggdc.net/pwt
+- Greene, W. H. (2018). *Econometric Analysis* (8. baskı). Pearson.
 - Hausman, J. A. (1978). Specification tests in econometrics. *Econometrica*, 46(6).
 - Islam, N. (1995). Growth empirics: a panel data approach. *Quarterly Journal of Economics*, 110(4).
 - Kremer, M., Willis, J. ve You, Y. (2022). Converging to convergence. *NBER Macroeconomics Annual*, 36.
